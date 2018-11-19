@@ -4,25 +4,23 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/echarts.min.js"></script>
-    <script src="js/Echarts_option.js"></script>
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/select_option.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
-    <link rel="stylesheet" type="text/css" href="css/amazeui.flat.css"/>
-    <title></title>
+<div>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	    <script src="js/jquery-3.3.1.min.js"></script>
+	    <script src="js/echarts.min.js"></script>
+	    <script src="js/Echarts_option.js"></script>
+	    <script src="js/jquery-ui.js"></script>
+	    <script src="bootstrap-3.3.7-dist/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+	    <script src="js/select_option.js"></script>
+	    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
+	    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.css"/>
+	    <link rel="stylesheet" type="text/css" href="css/amazeui.flat.css"/>
+	    <title></title>
+</div>	
 <style> 
-   #hidebg { position:absolute;left:0px;top:0px; 
-      background-color:#000; 
-      width:100%;  /*宽度设置为100%，这样才能使隐藏背景层覆盖原页面*/  
-      height: 100%;
-      opacity:0.6;  /*非IE浏览器下设置透明度
-          
-          为60%*/ 
-      display:none;
-      z-Index:2;} 
+   input {
+   	
+   }
 </style>
 </head>
 <body style="background-size:cover; height: 100%; width: 100%;margin: 0">
@@ -41,18 +39,16 @@
 		<input type="text"  id="datePicker2" style="width: 100px"/>
         <label>下限设置</label>
         <input type="text"  id="deadline1"  style="width: 30px"/>
+        <div style="display: inline;">       
         <label>上限设置</label>
-        <input type="text"  id="deadline2"  style="width: 30px"/>
-		<input type="button" Value="查询" onclick="Echarts()" />
-      <%--  <input type="button" value="导出excle" id="ExcleButton" onclick="ExcleBG()"/>--%>
+        <input  type="text"  id="deadline2"  style="display: inline;width: 50px;"/>
+        </div>
+		<input  class="btn" type="button" Value="查询" onclick="Echarts()" />
+		<input  class="btn" type="button"  value="新增" onclick="AddSeries()" />
     </form>
-    <div id="hidebg">
-        <h1 style="text-align: center;margin-top: 50px">正在导出数据···</h1>
-        <h1 style="text-align: center;margin-top: 50px">请稍等</h1>
-        
-    </div>
     <div id="container" style="height: 20px; width: 50px;"></div>
 </body>
+ 	<!--js内容-->
 <script type="text/javascript">
     //设置日期选择器
     $("#datePicker1").datepicker({ dateFormat: 'yy-mm-dd' });
@@ -68,37 +64,7 @@
         myChart.setOption(option, true);
     }
 
-    //导出excle方法，通过ajax调用后台导出
-    function ExcleBG(parameters) {
-        //设置按键不可用
-        $("#ExcleButton").attr("disabled", true);
-        $("#ExcleButton").val("loading..............");
-        //显示遮罩层
-        show();
-        //ajax以post方式发送指令
-        $.ajax({
-            type: 'post',
-            contentType: 'application/json',
-            url: 'index.aspx/ExcleExplore',
-            data: "{'str':''}",
-            dataType: 'json',
-            success: function(result) {
-                if (result.d[0]=="true") {
-                    alert("导出成功");
-                } else {
 
-                    alert("请点击“是”按钮，然后另存到所需的目录下");
-                }
-                //取消遮罩层
-                hide();
-
-                //取消变灰，还原按键
-                $("#ExcleButton").removeAttr("disabled");
-                $("#ExcleButton").val("导出excle");
-            }
-        })
-
-    }
 
     var marklineValue = 0;
     var marklineValue1 = null;
@@ -119,13 +85,32 @@
     //$("#datePicker1").val("2018-08-01");
     //$("#datePicker2").val("2018-09-01");
 
+	//计算日期相差天数方法
+	function CalDays () {
+			var s1 = ($("#datePicker1").val()).toString();
+			var s2 = ($("#datePicker2").val()).toString();
+			s1 = new Date(s1.replace(/-/g, "/"));
+			s2 = new Date(s2.replace(/-/g, "/"));
+			var days = s2.getTime() - s1.getTime();
+			var time = parseInt(days / (1000 * 60 * 60 * 24));
+			return time;
+	}
+
+	
+
     function Echarts() {
-    
+
+		//计算所查相差天数
+        var days =CalDays();
+
+
+    	
         //设置div图表区域的大小
         var worldMapContainer = document.getElementById('container');
         worldMapContainer.style.width = parseInt(window.innerWidth * 0.9) + 'px';
         sleep(20);
         worldMapContainer.style.height = parseInt(window.innerHeight * 0.9) + 'px';
+        option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4))
         
         myChart.resize();
         //读取两个输入框的值
@@ -165,7 +150,7 @@
             type: 'post',
             contentType: 'application/json',
             url: 'index.aspx/HelloWord',
-            data: "{'str':'" + sendData[0] + "','str2':'" + sendData[1] + "','str3':'" + sendData[2] + "','str4':'" + sendData[3] + "','str5':'" + sendData[4] + "'}",
+            data: "{'str':'" + sendData[0] + "','str2':'" + sendData[1] + "','str3':'" + sendData[2] + "','str4':'" + sendData[3] + "','str5':'" + sendData[4] + "','str6':'"+days+"'}",
             dataType: 'json',
             success: function (result) {
                 if (result.d==null) {
@@ -198,21 +183,17 @@
         })
     }
 
-    //显示隐藏层和弹出层 
-    function show() 
-    {
-        var hideobj = document.getElementById("hidebg");
-        hidebg.style.display = "block";  //显示隐藏层 
-        //hidebg.style.height=document.body.clientHeight+"px";//设置隐藏层的高度为当前页面高度
-      //  document.getElementById("hidebox").style.display = "block";  //显示弹出层 
-    }
+	function AddSeries () {
+	           var tempSeries = {};
+           tempSeries.name = 'vufguuj';
+           tempSeries.type = 'line';
+           tempSeries.calculable = true;
+           tempSeries.data = [2000,2006,2546,2815,2645,2945,1347];
 
-    //去除隐藏层和弹出层 
-    function hide()  
-    {
-        document.getElementById("hidebg").style.display = "none";
-        //   document.getElementById("hidebox").style.display="none"; 
-    }
+         
+           option.series.push(tempSeries);
+           myChart.setOption(option);
+	}
 </script>
       
 </html>

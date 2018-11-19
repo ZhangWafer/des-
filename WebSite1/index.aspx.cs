@@ -25,9 +25,34 @@ public partial class index : System.Web.UI.Page
     //str是Name，str1是LeftRight，str2是UpDown
     private static DataTable ResultTable = null;
 
+
+
+
+
     [WebMethod]
-    public static string[] HelloWord(string str, string str2, string str3, string str4, string str5)
+    public static string[] HelloWord(string str, string str2, string str3, string str4, string str5,string str6)
     {
+        //设置数据采样间隔
+         int SectionSize = 10;
+        int selectDays = int.Parse(str6);
+        if (selectDays<15)
+        {
+            SectionSize = 5;
+        }
+        else if (selectDays>=15&&selectDays<=30)
+        {
+            SectionSize = 15;
+        }
+        else if (selectDays>=30&&selectDays<=60)
+        {
+            SectionSize = 30;
+        }
+        else
+        {
+            SectionSize = 60;
+        }
+       
+
         string TableSelect = "";
         if (str3 == "null" || str3=="undefined")
         {
@@ -64,8 +89,7 @@ public partial class index : System.Web.UI.Page
         {
             return null;
         }
-        //设置数据采样间隔
-        var SectionSize = 10;
+
         string[] x_Result =null;
         string[] y_Result =null;
         //设置数组大小

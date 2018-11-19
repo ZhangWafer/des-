@@ -40,6 +40,7 @@
 			        },
 			        yAxis: {
 			            type: 'value',
+			            max:5,
 			            axisLabel: {
 			                formatter: '{value} L/min'
 			            }
