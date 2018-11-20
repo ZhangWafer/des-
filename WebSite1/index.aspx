@@ -41,6 +41,7 @@
         </div>
 		<input  class="btn" type="button" Value="查询" onclick="Echarts()" />
 		<input  class="btn" type="button"  value="新增" onclick="AddSeries()" />
+		<!--<input  class="btn" type="button" value="更改上下限" onclick="changeDeadline()" />-->
     </form>
     <div id="container" style="height: 20px; width: 50px;"></div>
 </body>
@@ -69,6 +70,28 @@
         }
     }
                          
+    //更改上下限方法
+    function changeDeadline () {
+    	//读取两个输入框的值
+        marklineValue1 = $("#deadline1").val();
+        marklineValue2 = $("#deadline2").val();
+        //设置markline值
+        option.series[0].markLine.data[0].yAxis = marklineValue1;
+        option.series[0].markLine.data[1].yAxis = marklineValue2;
+        //设置markline上下颜色
+		option.visualMap[0].pieces[0].lte = parseFloat(marklineValue1);
+	    option.visualMap[0].pieces[1].gt = parseFloat(marklineValue1);
+	    option.visualMap[0].pieces[1].lte = parseFloat(marklineValue2);
+	    option.visualMap[0].pieces[2].gt = parseFloat(marklineValue2);
+        //设置图标区域y轴最大值
+        option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4));
+	    //重新启动echart
+	     myChart.setOption(option, true);
+    }
+    
+    
+    
+    
     ////测试环境初始化变量
     //$("#datePicker1").val("2018-08-01");
     //$("#datePicker2").val("2018-09-01");
