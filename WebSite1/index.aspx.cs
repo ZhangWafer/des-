@@ -86,26 +86,39 @@ public partial class index : System.Web.UI.Page
         {
             return null;
         }
+        //暂存的X,Y数组
+        List<string> x_Result =new List<string>();
+        List<string> y_Result =new List<string>();
+        //计算多少个有效数值
+        int countingStarts = 1;
 
-        string[] x_Result =null;
-        string[] y_Result =null;
-        //设置数组大小
-        string[] dataSql = new string[(ResultTable.Rows.Count / SectionSize) * 2 + 1];
-        //写入数组大小，到数组第一位dataSql[0]
-        dataSql[0] = (ResultTable.Rows.Count / SectionSize).ToString();
         for (int i = 1; i < ResultTable.Rows.Count / SectionSize; i++)
         {
 
-            dataSql[i] = ResultTable.Rows[i * SectionSize][2].ToString();
+           // dataSql[i] = ResultTable.Rows[i * SectionSize][2].ToString();
+            
 
             if (ResultTable.Rows[i * SectionSize][1].ToString() == "0")
             {
-                dataSql[ResultTable.Rows.Count / SectionSize + i] = "-";
+               // dataSql[ResultTable.Rows.Count / SectionSize + i] = "-";
+
             }
             else
             {
-                dataSql[ResultTable.Rows.Count / SectionSize + i] = ResultTable.Rows[i * SectionSize][1].ToString();
+                x_Result.Add(ResultTable.Rows[i * SectionSize][2].ToString());
+                y_Result.Add(ResultTable.Rows[i * SectionSize][1].ToString());
+                countingStarts++;
+                // dataSql[ResultTable.Rows.Count / SectionSize + i] = ResultTable.Rows[i * SectionSize][1].ToString();
             }
+        }
+        //设置数组大小
+        string[] dataSql = new string[countingStarts  * 2 + 1];
+        //写入数组大小，到数组第一位dataSql[0]
+        dataSql[0] = countingStarts.ToString();
+        for (int i = 1; i < countingStarts-1; i++)
+        {
+            dataSql[i] = x_Result[i];
+            dataSql[i + countingStarts]=y_Result[i];
         }
 
         return dataSql;
