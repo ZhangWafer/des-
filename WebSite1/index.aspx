@@ -17,11 +17,7 @@
 	    <link rel="stylesheet" type="text/css" href="css/amazeui.flat.css"/>
 	    <title></title>
 </div>	
-<style> 
-   input {
-   	
-   }
-</style>
+
 </head>
 <body style="background-size:cover; height: 100%; width: 100%;margin: 0">
     <form id="form1" runat="server" >
@@ -57,14 +53,6 @@
     var dom = document.getElementById("container");
     var myChart = echarts.init(dom);
 
-    //测试方法
-    function Test() {
-        option.visualMap[0].pieces[0].color = 'yellow';
-
-        myChart.setOption(option, true);
-    }
-
-
 
     var marklineValue = 0;
     var marklineValue1 = null;
@@ -95,32 +83,11 @@
 			var time = parseInt(days / (1000 * 60 * 60 * 24));
 			return time;
 	}
-
 	
-
-    function Echarts() {
-
-		//计算所查相差天数
-        var days =CalDays();
-
-
-    	
-        //设置div图表区域的大小
-        var worldMapContainer = document.getElementById('container');
-        worldMapContainer.style.width = parseInt(window.innerWidth * 0.9) + 'px';
-        sleep(20);
-        worldMapContainer.style.height = parseInt(window.innerHeight * 0.9) + 'px';
-        option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4))
-        
-        myChart.resize();
-        //读取两个输入框的值
-        marklineValue1 = $("#deadline1").val();
-        marklineValue2 = $("#deadline2").val();
-
-        //创建新的数组
-        var sendData = new Array(5);
-        //选择第一或第三项的时候做select4的判断
-        if (($("#select1").val() == "流量监控") || ($("#select1").val() == "喷淋压力监控")) {
+	//创建新的数组
+    var sendData = new Array(5);
+	function SelectOPtioned () {
+		if (($("#select1").val() == "流量监控") || ($("#select1").val() == "喷淋压力监控")) {
             sendData[0] = $("#select2").val();
             sendData[1] = $("#select3").val();
             sendData[3] = $("#datePicker1").val();
@@ -137,6 +104,26 @@
             sendData[5] = $("#deadline1").val();
             sendData[6] = $("#deadline2").val();
         }
+	}
+
+    function Echarts() {
+		//计算所查相差天数
+        var days =CalDays();
+        //设置div图表区域的大小
+        var worldMapContainer = document.getElementById('container');
+        worldMapContainer.style.width = parseInt(window.innerWidth * 0.9) + 'px';
+        sleep(20);
+        worldMapContainer.style.height = parseInt(window.innerHeight * 0.9) + 'px';
+        option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4))
+        
+        myChart.resize();
+        //读取两个输入框的值
+        marklineValue1 = $("#deadline1").val();
+        marklineValue2 = $("#deadline2").val();
+
+
+        //选择第一或第三项的时候做select4的判断
+		SelectOPtioned();
 
         //判断是否所有条件都进行了选择
         if (sendData[0] == "" || sendData[1] == "" || sendData[3] == "" || sendData[4] == ""||sendData[5]==""||sendData[6]=="") {
@@ -167,32 +154,76 @@
                 }
                 option.xAxis.data = x_value;
                 option.series[0].data = y_value;
-
                 //设置markline值
                 option.series[0].markLine.data[0].yAxis = marklineValue1;
                 option.series[0].markLine.data[1].yAxis = marklineValue2;
                 //设置markline上下颜色
-                option.visualMap[0].pieces[0].lte = parseFloat(marklineValue1);
-                option.visualMap[0].pieces[1].gt = parseFloat(marklineValue1);
-                option.visualMap[0].pieces[1].lte = parseFloat(marklineValue2);
-                option.visualMap[0].pieces[2].gt = parseFloat(marklineValue2);
-
+				option.visualMap[0].pieces[0].lte = parseFloat(marklineValue1);
+	            option.visualMap[0].pieces[1].gt = parseFloat(marklineValue1);
+	            option.visualMap[0].pieces[1].lte = parseFloat(marklineValue2);
+	            option.visualMap[0].pieces[2].gt = parseFloat(marklineValue2);
+				//设置数值精度
                 option.visualMap.precision = 2;
                 myChart.setOption(option, true);
             }
         })
     }
+		//复选按钮调用方法
+		function AddSeries () {
+		//计算所查相差天数
+        var days =CalDays();
+        //定义线段数量
+		var seriesNum =option.series.length;
+		//添加颜色控制区域visualmap
+		var tempVisualmap={};
+		tempVisualmap.show=false;
+		tempVisualmap.type='piecewise';			       
+		tempVisualmap.precision	=2; 		           
+		tempVisualmap.seriesIndex=seriesNum;			       
+		tempVisualmap.pieces=[ {gt: 0,lte: 5, color: 'red'},{gt: 5,lte: 10,color: 'green'}, { gt: 11,lte: 25,color:'red'}]			           
+		option.visualMap.push(tempVisualmap)
+		//设置上下限的数值
+		option.visualMap[seriesNum].pieces[0].lte = parseFloat(marklineValue1);
+	    option.visualMap[seriesNum].pieces[1].gt = parseFloat(marklineValue1);
+	    option.visualMap[seriesNum].pieces[1].lte = parseFloat(marklineValue2);
+	    option.visualMap[seriesNum].pieces[2].gt = parseFloat(marklineValue2);
+	    
+	    SelectOPtioned();
+		//新增一条series
+	    var tempSeries = {};
+        tempSeries.name = 'vufguuj';
+        tempSeries.type = 'line';
+        tempSeries.data = [];        
+        option.series.push(tempSeries);
+        //设置数值精度
+        option.visualMap.precision = 2;
+        //定义y数组
+        var y_value = new Array();
+		//ajax请求数据
+		$.ajax({
+            type: 'post',
+            contentType: 'application/json',
+            url: 'index.aspx/HelloWord',
+            data: "{'str':'" + sendData[0] + "','str2':'" + sendData[1] + "','str3':'" + sendData[2] + "','str4':'" + sendData[3] + "','str5':'" + sendData[4] + "','str6':'"+days+"'}",
+            dataType: 'json',
+            success: function (result) {
+            	//数据返回成功方法
+				if (result.d==null) {
+                    alert("读取数据为空！");
+                    return;
+               }
+                //x轴的值和y轴的值的定义
+                 // alert(result.d[0]);
+                for (var i = 0; i < parseInt(result.d[0]); i++) {
+                    y_value[i] = result.d[i + parseInt(result.d[0]) + 2];
+                }
+				//把数据塞进y轴
+                option.series[seriesNum].data = y_value;
+                //重新启动echarts
+          		myChart.setOption(option, true);
+            }
+		});
 
-	function AddSeries () {
-	           var tempSeries = {};
-           tempSeries.name = 'vufguuj';
-           tempSeries.type = 'line';
-           tempSeries.calculable = true;
-           tempSeries.data = [2000,2006,2546,2815,2645,2945,1347];
-
-         
-           option.series.push(tempSeries);
-           myChart.setOption(option);
 	}
 </script>
       

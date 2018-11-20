@@ -67,7 +67,6 @@
 			            seriesIndex: 0, //控制series 对应的区域
 			            pieces: [
 			                {
-			                   
 			                    gt: 0,
 			                    lte: 5,
 			                    color: 'red'

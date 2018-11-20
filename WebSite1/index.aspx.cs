@@ -26,9 +26,6 @@ public partial class index : System.Web.UI.Page
     private static DataTable ResultTable = null;
 
 
-
-
-
     [WebMethod]
     public static string[] HelloWord(string str, string str2, string str3, string str4, string str5,string str6)
     {
