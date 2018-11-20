@@ -114,8 +114,10 @@
         worldMapContainer.style.width = parseInt(window.innerWidth * 0.9) + 'px';
         sleep(20);
         worldMapContainer.style.height = parseInt(window.innerHeight * 0.9) + 'px';
-        option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4))
-        
+        //设置图标区域y轴最大值
+        option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4));
+        //设置曲线名称
+        option.series[0].name= $("#select1").val()+'-'+$("#select2").val()+'-'+$("#select3").val()+'-'+$("#select4").val();
         myChart.resize();
         //读取两个输入框的值
         marklineValue1 = $("#deadline1").val();
@@ -191,7 +193,8 @@
 	    SelectOPtioned();
 		//新增一条series
 	    var tempSeries = {};
-        tempSeries.name = 'vufguuj';
+        tempSeries.name =  $("#select1").val()+'-'+$("#select2").val()+'-'+$("#select3").val()+'-'+$("#select4").val();
+//      $("#select1").val().toString()+"-"+$("#select2").val().toString()+“-”+$("#select3").val().toString()+“-”+$("#select4").val().toString();
         tempSeries.type = 'line';
         tempSeries.data = [];        
         option.series.push(tempSeries);
