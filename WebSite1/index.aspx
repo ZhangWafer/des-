@@ -42,6 +42,7 @@
 		<input  class="btn" type="button" Value="查询" onclick="Echarts()" />
 		<input  class="btn" type="button"  value="新增" onclick="AddSeries()" />
 		<!--<input  class="btn" type="button" value="更改上下限" onclick="changeDeadline()" />-->
+		<input  class="btn" type="button"  value="清空" onclick="ClearWeb()" />
     </form>
     <div id="container" style="height: 20px; width: 50px;"></div>
 </body>
@@ -69,7 +70,12 @@
             return;
         }
     }
-                         
+    
+    //刷新页面
+    function ClearWeb () {
+    	window.location.reload();
+    }
+    
     //更改上下限方法
     function changeDeadline () {
     	//读取两个输入框的值
