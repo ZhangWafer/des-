@@ -89,14 +89,13 @@
 	    option.visualMap[0].pieces[1].gt = parseFloat(marklineValue1);
 	    option.visualMap[0].pieces[1].lte = parseFloat(marklineValue2);
 	    option.visualMap[0].pieces[2].gt = parseFloat(marklineValue2);
+	    
         //设置图标区域y轴最大值
         option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4));
 	    //重新启动echart
 	     myChart.setOption(option, true);
     }
-    
-    
-    
+
     
     ////测试环境初始化变量
     //$("#datePicker1").val("2018-08-01");
@@ -135,6 +134,15 @@
         }
 	}
 
+	//随机颜色生成
+	function RandonColor () {
+		this.r = Math.floor(Math.random()*180);
+	    this.g = Math.floor(Math.random()*255);
+	    this.b = Math.floor(Math.random()*255);
+	    var  color = 'rgba('+ this.r +','+ this.g +','+ this.b +',0.8)';
+	    return color;
+	}
+	
     function Echarts() {
 		//计算所查相差天数
         var days =CalDays();
@@ -151,16 +159,19 @@
         //读取两个输入框的值
         marklineValue1 = $("#deadline1").val();
         marklineValue2 = $("#deadline2").val();
-
-
         //选择第一或第三项的时候做select4的判断
 		SelectOPtioned();
-
         //判断是否所有条件都进行了选择
         if (sendData[0] == "" || sendData[1] == "" || sendData[3] == "" || sendData[4] == ""||sendData[5]==""||sendData[6]=="") {
             alert("缺少必填项！");
             return;
         }
+        //设置select1，2不可用
+        $("#select1").attr("disabled",'disabled');
+        $("#select1").attr('style','background-color: #9D9D9D;');
+        $("#select2").attr("disabled",'disabled');
+        $("#select2").attr('style','background-color: #9D9D9D;');
+        //新建缓存x,y
         var x_value = new Array();
         var y_value = new Array();
         //ajax发送数据到后台
@@ -175,7 +186,6 @@
                     alert("读取数据为空！");
                     return;
                 }
-
                 //x轴的值和y轴的值的定义
                  // alert(result.d[0]);
 
@@ -218,8 +228,11 @@
 	    option.visualMap[seriesNum].pieces[1].gt = parseFloat(marklineValue1);
 	    option.visualMap[seriesNum].pieces[1].lte = parseFloat(marklineValue2);
 	    option.visualMap[seriesNum].pieces[2].gt = parseFloat(marklineValue2);
-	    
+	    //设置上下限颜色
+	    option.visualMap[seriesNum].pieces[1].color = RandonColor();
+	    //取选择box的值
 	    SelectOPtioned();
+	    
 		//新增一条series
 	    var tempSeries = {};
         tempSeries.name =  $("#select1").val()+'-'+$("#select2").val()+'-'+$("#select3").val()+'-'+$("#select4").val();

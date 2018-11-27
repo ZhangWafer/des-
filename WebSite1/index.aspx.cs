@@ -27,20 +27,20 @@ public partial class index : System.Web.UI.Page
 
 
     [WebMethod]
-    public static string[] HelloWord(string str, string str2, string str3, string str4, string str5,string str6)
+    public static string[] HelloWord(string str, string str2, string str3, string str4, string str5, string str6)
     {
         //设置数据采样间隔
-         int SectionSize = 10;
+        int SectionSize = 10;
         int selectDays = int.Parse(str6);
-        if (selectDays<15)
+        if (selectDays < 15)
         {
             SectionSize = 5;
         }
-        else if (selectDays>=15&&selectDays<=30)
+        else if (selectDays >= 15 && selectDays <= 30)
         {
             SectionSize = 15;
         }
-        else if (selectDays>=30&&selectDays<=60)
+        else if (selectDays >= 30 && selectDays <= 60)
         {
             SectionSize = 30;
         }
@@ -48,10 +48,10 @@ public partial class index : System.Web.UI.Page
         {
             SectionSize = 60;
         }
-       
+
 
         string TableSelect = "";
-        if (str3 == "null" || str3=="undefined")
+        if (str3 == "null" || str3 == "undefined")
         {
             TableSelect = string.Format("Name='{0}' and  LeftRight='{1}'", str, str2);
 
@@ -79,13 +79,22 @@ public partial class index : System.Web.UI.Page
         }
         catch (Exception)
         {
-           Console.Write("读取id失败");
+            Console.Write("读取id失败");
         }
 
-        if (ResultTable.Rows.Count==0)
+        try
         {
+            if (ResultTable.Rows.Count == 0)
+            {
+                return null;
+            }
+        }
+        catch (Exception)
+        {
+
             return null;
         }
+
         //暂存的X,Y数组
         List<string> x_Result =new List<string>();
         List<string> y_Result =new List<string>();
