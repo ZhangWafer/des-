@@ -142,11 +142,13 @@
 	    var  color = 'rgba('+ this.r +','+ this.g +','+ this.b +',0.8)';
 	    return color;
 	}
-	
+	 
+	var LineList=new Array();
     function Echarts() {
 		//计算所查相差天数
         var days =CalDays();
         //设置div图表区域的大小
+        option.visualMap.precision = 2;
         var worldMapContainer = document.getElementById('container');
         worldMapContainer.style.width = parseInt(window.innerWidth * 0.9) + 'px';
         sleep(20);
@@ -171,6 +173,9 @@
         $("#select1").attr('style','background-color: #9D9D9D;');
         $("#select2").attr("disabled",'disabled');
         $("#select2").attr('style','background-color: #9D9D9D;');
+        //添加线体名称进列表
+        LineList.push(($("#select1").val()+'-'+$("#select2").val()+'-'+$("#select3").val()+'-'+$("#select4").val()).toString());
+        
         //新建缓存x,y
         var x_value = new Array();
         var y_value = new Array();
@@ -211,6 +216,11 @@
     }
 		//复选按钮调用方法
 		function AddSeries () {
+			if(LineList.indexOf(($("#select1").val()+'-'+$("#select2").val()+'-'+$("#select3").val()+'-'+$("#select4").val()).toString())!=-1)
+			{
+				alert('已存在该线体');
+				return;
+			}
 		//计算所查相差天数
         var days =CalDays();
         //定义线段数量
