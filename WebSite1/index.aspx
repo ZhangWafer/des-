@@ -171,8 +171,6 @@
         //设置select1，2不可用
         $("#select1").attr("disabled",'disabled');
         $("#select1").attr('style','background-color: #9D9D9D;');
-        $("#select2").attr("disabled",'disabled');
-        $("#select2").attr('style','background-color: #9D9D9D;');
         //添加线体名称进列表
         LineList.push(($("#select1").val()+'-'+$("#select2").val()+'-'+$("#select3").val()+'-'+$("#select4").val()).toString());
         
