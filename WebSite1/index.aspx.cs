@@ -22,6 +22,8 @@ public partial class index : System.Web.UI.Page
         referDataTable = SqlHelper.ExecuteDataTable("select * from Refer_Table");
     }
 
+
+
     //str是Name，str1是LeftRight，str2是UpDown
     private static DataTable ResultTable = null;
 
@@ -121,7 +123,7 @@ public partial class index : System.Web.UI.Page
             }
         }
         //设置数组大小
-        string[] dataSql = new string[countingStarts  * 2 + 1];
+        string[] dataSql = new string[countingStarts  * 2 + 3];
         //写入数组大小，到数组第一位dataSql[0]
         dataSql[0] = countingStarts.ToString();
         for (int i = 1; i < countingStarts-1; i++)
@@ -129,7 +131,11 @@ public partial class index : System.Web.UI.Page
             dataSql[i] = x_Result[i];
             dataSql[i + countingStarts]=y_Result[i];
         }
-
+        DataTable lineTable=new DataTable();
+        lineTable = SqlHelper.ExecuteDataTable("select * from DeadlineTable");
+        DataRow[] lineDataRows = lineTable.Select(string.Format("id='{0}'", registerNum[0][0].ToString()));
+        dataSql[dataSql.Length-2] = lineDataRows[0][1].ToString();
+        dataSql[dataSql.Length - 1] = lineDataRows[0][2].ToString();
         return dataSql;
     }
 

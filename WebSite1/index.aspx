@@ -161,6 +161,7 @@
         //读取两个输入框的值
         marklineValue1 = $("#deadline1").val();
         marklineValue2 = $("#deadline2").val();
+
         //选择第一或第三项的时候做select4的判断
 		SelectOPtioned();
         //判断是否所有条件都进行了选择
