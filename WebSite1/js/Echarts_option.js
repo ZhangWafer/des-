@@ -94,7 +94,7 @@
 
 			                    markLine: {
 			                        data: [
-			                            { yAxis: marklineValue },
+			                            { yAxis: marklineValue  },
 			                            { type: 'average', name: '平均值' }
 			                        ]
 			                    }

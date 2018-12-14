@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="index.aspx.cs" Inherits="index" %>
+﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="index.aspx.cs" Inherits="index" %>
 
 <!DOCTYPE html>
 
@@ -33,10 +33,10 @@
 		<input type="text"  id="datePicker1" style="width: 100px"/>
 		<label>结束时间</label>
 		<input type="text"  id="datePicker2" style="width: 100px"/>
-        <label>下限设置</label>
+
         <input type="text"  id="deadline1"  style="width: 30px"/>
         <div style="display: inline;">       
-        <label>上限设置</label>
+
         <input  type="text"  id="deadline2"  style="display: inline;width: 50px;"/>
         </div>
 		<input  class="btn" type="button" Value="查询" onclick="Echarts()" />
@@ -54,11 +54,13 @@
     //定义mychart
     var dom = document.getElementById("container");
     var myChart = echarts.init(dom);
-
-
+	
+	$("#deadline1").hide();
+	$("#deadline2").hide();
+	
     var marklineValue = 0;
-    var marklineValue1 = null;
-    var marklineValue2 = null;
+    var marklineValue1 = 2;
+    var marklineValue2 = 4;
 
     //线程休眠
     function sleep(numberMillis) {
@@ -120,8 +122,7 @@
             sendData[1] = $("#select3").val();
             sendData[3] = $("#datePicker1").val();
             sendData[4] = $("#datePicker2").val();
-            sendData[5] = $("#deadline1").val();
-            sendData[6] = $("#deadline2").val();
+
         }
         else {
             sendData[0] = $("#select2").val();
@@ -129,8 +130,7 @@
             sendData[2] = $("#select4").val();
             sendData[3] = $("#datePicker1").val();
             sendData[4] = $("#datePicker2").val();
-            sendData[5] = $("#deadline1").val();
-            sendData[6] = $("#deadline2").val();
+
         }
 	}
 
@@ -154,18 +154,15 @@
         sleep(20);
         worldMapContainer.style.height = parseInt(window.innerHeight * 0.9) + 'px';
         //设置图标区域y轴最大值
-        option.yAxis.max = (parseFloat($("#deadline2").val()) + parseFloat($("#deadline2").val() / 4));
+        option.yAxis.max = (parseFloat(marklineValue2) + parseFloat(marklineValue2/ 4));
         //设置曲线名称
         option.series[0].name= $("#select1").val()+'-'+$("#select2").val()+'-'+$("#select3").val()+'-'+$("#select4").val();
         myChart.resize();
-        //读取两个输入框的值
-        marklineValue1 = $("#deadline1").val();
-        marklineValue2 = $("#deadline2").val();
 
         //选择第一或第三项的时候做select4的判断
 		SelectOPtioned();
         //判断是否所有条件都进行了选择
-        if (sendData[0] == "" || sendData[1] == "" || sendData[3] == "" || sendData[4] == ""||sendData[5]==""||sendData[6]=="") {
+        if (sendData[0] == "" || sendData[1] == "" || sendData[3] == "" || sendData[4] == "") {
             alert("缺少必填项！");
             return;
         }
@@ -192,7 +189,10 @@
                 }
                 //x轴的值和y轴的值的定义
                  // alert(result.d[0]);
-
+				//读取出上下限的值
+				marklineValue1=result.d[result.d.length-2];
+				marklineValue2=result.d[result.d.length-1];
+				//分割线
                 for (var i = 0; i < parseInt(result.d[0]); i++) {
                     x_value[i] = result.d[i + 1];
                     y_value[i] = result.d[i + parseInt(result.d[0]) + 2];
